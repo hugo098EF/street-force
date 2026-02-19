@@ -1,9 +1,11 @@
 import Navbar from "../components/Navbar";
 import { products } from "@/data/products";
-import Image from "next/image";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Page() {
+  const brands = Array.from(new Set(products.map((p) => p.brand.trim())));
+
   return (
     <main className="bg-black text-white min-h-screen">
       <Navbar />
@@ -11,46 +13,70 @@ export default function Page() {
       <div className="p-10 max-w-7xl mx-auto">
         <h1 className="text-4xl font-bold mb-10">Sneakers</h1>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {products.map((product) => (
-            <div
-              key={product.id}
-              className="bg-zinc-900 rounded-xl overflow-hidden border border-zinc-800 hover:border-green-500 transition duration-300"
-            >
-              {/* Imagen */}
-              <div className="relative w-full h-56">
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  fill
-                  className="object-cover hover:scale-105 transition duration-300"
-                />
+        <p className="text-gray-400 mb-8">
+          Selecciona una marca para ver los modelos disponibles.
+        </p>
 
-                {/* Badge */}
-                <div className="absolute top-3 left-3 bg-green-500 text-black text-xs px-3 py-1 rounded-full font-semibold">
-                  ORIGINAL
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {brands.map((brand) => {
+            const brandSlug = brand.toLowerCase().replace(/\s+/g, "-");
+
+            const count = products.filter((p) => p.brand === brand).length;
+
+            return (
+              <Link
+                key={brand}
+                href={`/sneakers/brand/${encodeURIComponent(
+                  brand.toLowerCase()
+                )}`}
+                className="
+                  group bg-zinc-900 border border-zinc-800 rounded-2xl p-6
+                  transition duration-300
+                  hover:-translate-y-1 hover:border-green-500
+                  hover:shadow-[0_0_30px_rgba(34,197,94,0.35)]
+                "
+              >
+                {/* Badge blanco redondeado */}
+                <div
+                  className="
+                    relative w-full h-20 mb-5
+                    flex items-center justify-center
+                  "
+                >
+                  <div
+                    className="
+                      relative w-24 h-24 rounded-2xl bg-white
+                      flex items-center justify-center
+                      shadow-sm
+                      transition duration-300
+                      group-hover:scale-105
+                      group-hover:shadow-[0_0_22px_rgba(34,197,94,0.35)]
+                    "
+                  >
+                    <Image
+                      src={`/brands/${brandSlug}.png`}
+                      alt={brand}
+                      fill
+                      className="
+                        object-contain p-3
+                        transition duration-300
+                        grayscale-[30%] contrast-125
+                        group-hover:grayscale-0 group-hover:contrast-150 group-hover:saturate-150
+                      "
+                    />
+                  </div>
                 </div>
-              </div>
 
-              {/* Info */}
-              <div className="p-5">
-                <h2 className="text-lg font-semibold mb-2">
-                  {product.name}
+                <h2 className="text-xl font-semibold capitalize">
+                  {brand}
                 </h2>
 
-                <p className="text-green-400 font-bold text-xl mb-4">
-                  Q{product.price}
+                <p className="text-gray-400 text-sm mt-2 group-hover:text-gray-200 transition">
+                  {count} modelos disponibles →
                 </p>
-
-                <Link
-                  href={`/sneakers/${product.id}`}
-                  className="inline-block bg-white text-black px-4 py-2 rounded font-semibold hover:bg-gray-200 transition"
-                >
-                  Ver producto
-                </Link>
-              </div>
-            </div>
-          ))}
+              </Link>
+            );
+          })}
         </div>
       </div>
     </main>
