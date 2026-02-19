@@ -35,7 +35,7 @@ export default function Home() {
               GUATEMALA • SNEAKERS ORIGINALES
             </p>
 
-            <h1 className="text-5xl md:text-6xl font-bold leading-tight">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight">
               Street Force
             </h1>
 
